@@ -1,2 +1,5 @@
 # icmit
-AI commit
+Automatically generate commit messages with AI
+
+# Usage
+...
