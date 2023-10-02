@@ -1,4 +1,4 @@
-# Copilot, for your terminal
+# Copilot, for your commits
 
 icmt, spelled "I Commit", automatically generate commit messages for the current changes.
 A CLI tool that generates commit messages from repository state.
