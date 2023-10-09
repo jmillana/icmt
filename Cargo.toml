@@ -2,7 +2,7 @@
 name = "icmt"
 license = "MIT"
 edition = "2021"
-version = "0.1.1"
+version = "0.2.0"
 readme = "README.md"
 categories = ["command-line-utilities"]
 homepage = "https://github.com/jmillana/icmt"
@@ -11,15 +11,13 @@ authors = ["Jordi Marimon <jordi@marimon.tech>"]
 description = "Generate commit messages with AI, using chat-gpt-3.5-turbo"
 
 [dependencies]
-log = "0.4.19"
+log = "0.4.20"
 question = "0.2.2"
 spinners = "4.1.0"
-serde_json = { version = "1.0.100", default-features = false }
-serde = { version = "1.0.171", default-features = false }
-clap = { version = "4.3.11", features = ["derive"] }
-clap_builder = "4.3.11"
-clap_lex = "0.5.0"
-reqwest = { version = "0.11.18", default-features = false, features = [
+serde_json = { version = "1.0.107", default-features = false }
+serde = { version = "1.0.188", default-features = false }
+clap = { version = "4.4.6", features = ["derive"] }
+reqwest = { version = "0.11.22", default-features = false, features = [
   "json",
   "blocking",
   "rustls-tls",
@@ -28,4 +26,4 @@ bat = { version = "0.23.0", default-features = false, features = [
   "regex-onig",
 ] }
 colored = "2.0.4"
-regex = "1.9.1"
+regex = "1.9.6"
