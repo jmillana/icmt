@@ -28,6 +28,10 @@ pub struct Cli {
     #[clap(short = 'e', long)]
     gitmoji: bool,
 
+    // Auto accept
+    #[clap(short = 'y', long)]
+    yes: bool,
+
     #[clap(short, long)]
     token_limit: Option<usize>,
 
@@ -90,6 +94,7 @@ fn commit_workflow(mut chat_completions: completions::ChatCompletions) {
         "Generating your commit message...".into(),
     );
     chat_completions.set_system_prompt(prompts::SystemPrompt::Commit);
+    let auto_accept = chat_completions.cli.yes;
 
     let commit_changes = git::get_commit_changes().unwrap_or_else(|| {
         spinner.stop_and_persist(
@@ -108,28 +113,22 @@ fn commit_workflow(mut chat_completions: completions::ChatCompletions) {
 
     pprint(&commit_message, "bash");
 
-    let accept_commit = ask_for_confirmation(">> Accept the generated commit? [Y/n]", None);
-
-    if accept_commit {
+    if auto_accept || ask_for_confirmation(">> Apply the generated commit? [Y/n]", None) {
         let mut commit_cmd = "git commit -m '".to_string();
         commit_cmd.push_str(commit_message.as_str());
         commit_cmd.push_str("'");
 
         pprint(&commit_cmd, "bash");
 
-        let should_run = ask_for_confirmation(">> Run the generated commit? [Y/n]", None);
+        spinner = Spinner::new(Spinners::BouncingBar, "Executing...".into());
+        let (stdout, _) = run_cmd(&commit_cmd, &"bash", &mut spinner);
 
-        if should_run {
-            spinner = Spinner::new(Spinners::BouncingBar, "Executing...".into());
-            let (stdout, _) = run_cmd(&commit_cmd, &"bash", &mut spinner);
+        spinner.stop_and_persist(
+            "✔".green().to_string().as_str(),
+            "Command ran successfully".green().to_string(),
+        );
 
-            spinner.stop_and_persist(
-                "✔".green().to_string().as_str(),
-                "Command ran successfully".green().to_string(),
-            );
-
-            println!("{}", String::from_utf8_lossy(&stdout));
-        }
+        println!("{}", String::from_utf8_lossy(&stdout));
     }
 }
 

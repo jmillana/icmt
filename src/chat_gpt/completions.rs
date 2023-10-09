@@ -39,7 +39,7 @@ impl ChatCompletions {
             "✔".green().to_string().as_str(),
             "Got some results!".green().to_string(),
         );
-        let mut finish = false;
+        let mut finish = self.cli.yes;
         while !finish {
             crate::pprint(&response_prompt.content, "bash");
             let should_refine =
