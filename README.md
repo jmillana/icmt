@@ -39,11 +39,15 @@ Arguments:
 
 Options:
   -m, --mode     [default: commit] Currently only commit mode is implemented
-  -e, --gtmoji   Use gitmoji emojis for the commit message 
+  -e, --gtmoji   Use gitmoji emojis for the commit message
   -t, --token-limit Set the maximum amount of tokens that can be used per request
   -H, --hint     Set a hint to be used to give extra context to the generated responses
   -h, --help     Print help information
   -V, --version  Print version information
+```
+
+```sh
+$ icmt -e -y
 ```
 
 ## Develop
