@@ -86,7 +86,10 @@ Update the README.md file with instructions on how to build and run the project.
 [main 0b7bed5] 📝 Update README.md with build and run instructions
  1 file changed, 5 insertions(+), 1 deletion(-)
 ```
-
+Also, if you want to manually update the generated commit you can always run and amend before pushing the changes to the remote
+```sh
+git commit --amend
+```
 ## Develop
 
 Make sure you have the latest version of rust installed (use [rustup](https://rustup.rs/)). Then, you can build the project by running `cargo build`, and run it with `cargo run`.
