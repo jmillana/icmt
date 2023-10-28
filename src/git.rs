@@ -43,6 +43,17 @@ pub fn get_branch_name() -> Option<String> {
     return Some(branch_name.split_whitespace().nth(1).unwrap().to_string());
 }
 
+pub fn restore_head(n_commits: usize) {
+    Command::new("git")
+        .arg("reset")
+        .arg(format!("HEAD~{}", n_commits))
+        .output()
+        .unwrap_or_else(|_| {
+            println!("Failed to execute git log.");
+            std::process::exit(1);
+        });
+}
+
 pub fn get_commits(base_branch: &str) -> Option<Vec<String>> {
     // Get all the commits of the current branch
     let commits_cmd = Command::new("git")
