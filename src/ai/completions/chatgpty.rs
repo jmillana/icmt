@@ -4,46 +4,39 @@ use reqwest::blocking::{Client, Response};
 use serde_json::json;
 use spinners::{Spinner, Spinners};
 
-use crate::prompts;
-use crate::{Cli, Config, Mode};
+use crate::ai::completions::prompts;
+use crate::cli::utils;
+use crate::Config;
 
-pub struct ChatCompletions {
-    system_prompt: prompts::Prompt,
-    pub cli: Cli,
+pub struct GptyCompletions {
+    pub system_prompt: prompts::Prompt,
     pub config: Config,
-    pub mode: Mode,
 }
 
-impl ChatCompletions {
-    pub fn new(cli: Cli, config: Config) -> Self {
-        let mode = match cli.mode.as_str() {
-            "commit" => Mode::Commit,
-            _ => Mode::Commit,
-        };
+impl GptyCompletions {
+    pub fn new(config: Config) -> Self {
         Self {
             system_prompt: prompts::Prompt::new(),
-            cli,
             config,
-            mode,
         }
     }
 
-    pub fn set_system_prompt(&mut self, system_prompt: prompts::SystemPrompt) {
-        self.system_prompt = system_prompt.prompt(&self.cli);
-    }
-
-    pub fn refine_loop(self: &Self, prompt: prompts::Prompt, spinner: &mut Spinner) -> String {
+    pub fn refine_loop(
+        self: &Self,
+        prompt: prompts::Prompt,
+        mut should_refine: bool,
+        spinner: &mut Spinner,
+    ) -> String {
         let mut refined_prompts = vec![prompt.clone()];
-        let mut response_prompt = self.run(refined_prompts.clone(), spinner);
+        let mut response_prompt = self.call(refined_prompts.clone(), spinner);
         spinner.stop_and_persist(
             "✔".green().to_string().as_str(),
             "Got some results!".green().to_string(),
         );
-        let mut finish = self.cli.yes;
-        while !finish {
+        while should_refine {
             crate::pprint(&response_prompt.content, "bash");
-            let should_refine =
-                crate::ask_for_confirmation(">> Refine the prompt? [y/N]", Some(Answer::NO));
+            should_refine =
+                utils::ask_for_confirmation(">> Refine the prompt? [y/N]", Some(Answer::NO));
             refined_prompts.push(response_prompt.clone());
             if should_refine {
                 let user_refinement = Question::new(">> Enter your refinement: ").ask();
@@ -56,26 +49,25 @@ impl ChatCompletions {
                     }
                 };
                 refined_prompts.push(new_prompt);
-                response_prompt = self.run(refined_prompts.clone(), &mut spinner);
+                response_prompt = self.call(refined_prompts.clone(), &mut spinner);
                 spinner.stop_and_persist(
                     "✔".green().to_string().as_str(),
                     "Refined result!".green().to_string(),
                 );
-            } else {
-                finish = true;
             }
         }
         return response_prompt.content;
     }
 
-    pub fn run(
+    pub fn call(
         self: &Self,
         prompt: Vec<prompts::Prompt>,
         spinner: &mut Spinner,
     ) -> prompts::Prompt {
         let client = Client::new();
         let api_addr = format!("{}/chat/completions", self.config.api_base);
-        let max_tokens = self.cli.token_limit.unwrap_or(self.config.max_tokens);
+        //let max_tokens = self.cli.token_limit.unwrap_or(self.config.max_tokens);
+        let max_tokens = self.config.max_tokens;
         let mut group_prompts = vec![self.system_prompt.clone()];
         group_prompts.extend(prompt.clone());
 

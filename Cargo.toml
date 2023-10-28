@@ -15,15 +15,15 @@ log = "0.4.20"
 question = "0.2.2"
 spinners = "4.1.0"
 serde_json = { version = "1.0.107", default-features = false }
-serde = { version = "1.0.188", default-features = false }
-clap = { version = "4.4.6", features = ["derive"] }
+serde = { version = "1.0.190", default-features = false }
+clap = { version = "4.4.7", features = ["derive"] }
 reqwest = { version = "0.11.22", default-features = false, features = [
   "json",
   "blocking",
   "rustls-tls",
 ] }
-bat = { version = "0.23.0", default-features = false, features = [
+bat = { version = "0.24.0", default-features = false, features = [
   "regex-onig",
 ] }
 colored = "2.0.4"
-regex = "1.9.6"
+regex = "1.10.2"
