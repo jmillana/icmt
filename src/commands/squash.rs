@@ -30,7 +30,7 @@ pub fn squash_workflow(mut chat_completions: chatgpty::GptyCompletions, args: &S
         );
     }
     // Get commits ahead of the given branch
-    let commit_history = git::get_commits(base_branch);
+    let commit_history = git::commits::CommitHistory::from_branch(base_branch);
     if commit_history.commits.len() == 0 {
         spinner.stop_and_persist(
             "✖".red().to_string().as_str(),
@@ -41,7 +41,6 @@ pub fn squash_workflow(mut chat_completions: chatgpty::GptyCompletions, args: &S
     chat_completions.system_prompt = prompts::squash_system_prompt(true);
     // Generate the squash message
     let mut commits = Vec::new();
-    let n_commits = commit_history.commits.len();
     for commit in commit_history.commits {
         commits.push(commit.to_string());
     }
@@ -49,7 +48,7 @@ pub fn squash_workflow(mut chat_completions: chatgpty::GptyCompletions, args: &S
     let should_refine = !auto_accept;
     let mut commit_message = chat_completions.refine_loop(prompt, should_refine, &mut spinner);
     if args.gitmoji {
-        commit_message = git::replace_gitmoji(commit_message);
+        commit_message = git::gitmoji::replace(commit_message);
     }
     if auto_accept
         || ask_for_confirmation(
@@ -58,22 +57,29 @@ pub fn squash_workflow(mut chat_completions: chatgpty::GptyCompletions, args: &S
         )
     {
         // Reset the head of the branch and commit
-        pprint(&format!("git reset HEAD~{} ", n_commits), "bash");
+        pprint(&"git stash".to_string(), "bash");
+        pprint(&format!("git checkout {}", &base_branch), "bash");
         if args.dryrun {
             println!("Dryrun: branch head have not been modified");
         } else {
+            git::stash();
+            git::checkout(&base_branch);
         }
     }
     if auto_accept || ask_for_confirmation(">> Squash the commits? [Y/n]", None) {
-        let mut commit_cmd = "git commit -m '".to_string();
+        let squash_cmd = format!("git merge --squash {} '", &branch_name);
+
+        let mut commit_cmd = "git commit -m'".to_string();
         commit_cmd.push_str(commit_message.as_str());
         commit_cmd.push_str("'");
 
+        pprint(&squash_cmd, "bash");
         pprint(&commit_cmd, "bash");
         if args.dryrun {
             println!("Changes have not been applied");
             return;
         }
+        git::squash(&branch_name);
         let args = commands::RunArgs::build(commit_cmd);
 
         match commands::run(args) {

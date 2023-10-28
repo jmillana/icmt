@@ -18,7 +18,7 @@ pub fn commit_workflow(mut chat_completions: chatgpty::GptyCompletions, args: &C
     let auto_accept = args.auto_accept;
     println!("auto accept {}", auto_accept);
 
-    let commit_changes = git::get_commit_changes().unwrap_or_else(|| {
+    let commit_changes = git::cached_diff().unwrap_or_else(|| {
         spinner.stop_and_persist(
             "✖".red().to_string().as_str(),
             "Failed to get commit changes.".red().to_string(),
@@ -31,7 +31,7 @@ pub fn commit_workflow(mut chat_completions: chatgpty::GptyCompletions, args: &C
     let mut commit_message = chat_completions.refine_loop(prompt, should_refine, &mut spinner);
 
     if args.gitmoji {
-        commit_message = git::replace_gitmoji(commit_message);
+        commit_message = git::gitmoji::replace(commit_message);
     }
 
     if auto_accept || ask_for_confirmation(">> Apply the generated commit? [Y/n]", None) {
