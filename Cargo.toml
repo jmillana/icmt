@@ -26,4 +26,4 @@ bat = { version = "0.24.0", default-features = false, features = [
   "regex-onig",
 ] }
 colored = "2.0.4"
-regex = "1.10.2"
+regex = { version = "1.10.2", features = ["pattern"] }
