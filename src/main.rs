@@ -23,12 +23,11 @@ fn main() {
     let mut config = Config::new();
     match cli.token_limit {
         Some(limit) => config.max_tokens = limit,
-        _ => print!("Using default value"),
+        _ => (),
     };
     let chat_completions = chatgpty::GptyCompletions::new(config);
     match &cli.command {
         cli::Commands::Commit(args) => {
-            println!("testing {:?}", args);
             commands::commit::commit_workflow(chat_completions, &args);
         }
     };

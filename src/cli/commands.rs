@@ -1,7 +1,7 @@
 use clap::{Args, Parser, Subcommand};
 
 #[derive(Parser, Debug)]
-#[command(author="jmillana", version="0.3.0", about, long_about=None)]
+#[command(author="jmillana", version="0.3.1", about, long_about=None)]
 pub struct Cli {
     #[arg(short = 'y', global = true, help = "Auto accept the generated commit")]
     pub auto_accept: bool,
