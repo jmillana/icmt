@@ -30,6 +30,9 @@ fn main() {
         cli::Commands::Commit(args) => {
             commands::commit::commit_workflow(chat_completions, &args);
         }
+        cli::Commands::Squash(args) => {
+            commands::squash::squash_workflow(chat_completions, &args);
+        }
     };
 }
 
