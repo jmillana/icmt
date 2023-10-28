@@ -25,6 +25,8 @@ pub struct Cli {
     #[arg(
         short = 'H',
         long,
+        global = true,
+        num_args = 0.., 
         help = "Drive the AI to de-genenerate commit messages that fulfill your desires"
     )]
     pub hint: Option<String>,
