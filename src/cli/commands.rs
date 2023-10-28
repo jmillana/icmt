@@ -39,8 +39,12 @@ pub struct CommitArgs {
     #[arg(from_global)]
     pub token_limit: Option<usize>,
 
-    #[arg(short = 'e', long, help = "test")]
+    #[arg(short = 'e', long, help = "Add emojis to the commits")]
     pub gitmoji: bool,
-    #[arg(short = 'H', long, help = "hint")]
+    #[arg(
+        short = 'H',
+        long,
+        help = "Drive the AI to de-genenerate commit messages that fulfill your desires"
+    )]
     pub hint: Option<String>,
 }
