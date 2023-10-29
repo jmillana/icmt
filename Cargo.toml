@@ -2,7 +2,7 @@
 name = "icmt"
 license = "MIT"
 edition = "2021"
-version = "0.3.1"
+version = "0.3.2"
 readme = "README.md"
 categories = ["command-line-utilities"]
 homepage = "https://github.com/jmillana/icmt"
