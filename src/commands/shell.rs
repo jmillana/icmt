@@ -92,6 +92,6 @@ pub fn run(args: RunArgs) -> Result<Output, String> {
             command, command_output.stderr
         ));
     }
-    cli::utils::write_to_history(shell, &command.as_str());
+    // cli::utils::write_to_history(shell, &command.as_str());
     return Ok(command_output);
 }

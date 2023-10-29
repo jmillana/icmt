@@ -4,6 +4,7 @@ use bat::PrettyPrinter;
 use clap::Parser;
 use colored::Colorize;
 use config::Config;
+use env_logger;
 
 mod ai;
 mod cli;
@@ -19,6 +20,7 @@ fn main() {
         "🤖".bright_green(),
         "Welcome to commit AI!".bright_green()
     );
+    env_logger::init();
     let cli = cli::Cli::parse();
     let mut config = Config::new();
     match cli.token_limit {

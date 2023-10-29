@@ -38,11 +38,13 @@ pub fn squash_workflow(mut chat_completions: chatgpty::GptyCompletions, args: &S
         );
         std::process::exit(1);
     }
-    chat_completions.system_prompt = prompts::squash_system_prompt(true);
+    log::debug!("History: {}", commit_history.to_string());
+    chat_completions.system_prompt = prompts::squash_system_prompt(args.gitmoji);
     // Generate the squash message
     let mut commits = Vec::new();
     for commit in commit_history.commits {
-        commits.push(commit.to_string());
+        log::debug!("Commit content: {}", commit.contents());
+        commits.push(commit.contents());
     }
     let prompt = prompts::get_squash_user_prompt(commits, &args.hint);
     let should_refine = !auto_accept;
@@ -67,13 +69,13 @@ pub fn squash_workflow(mut chat_completions: chatgpty::GptyCompletions, args: &S
         }
     }
     if auto_accept || ask_for_confirmation(">> Squash the commits? [Y/n]", None) {
-        let squash_cmd = format!("git merge --squash {} '", &branch_name);
+        let merge_cmd = format!("git merge --squash {} '", &branch_name);
 
         let mut commit_cmd = "git commit -m'".to_string();
         commit_cmd.push_str(commit_message.as_str());
         commit_cmd.push_str("'");
 
-        pprint(&squash_cmd, "bash");
+        pprint(&merge_cmd, "bash");
         pprint(&commit_cmd, "bash");
         if args.dryrun {
             println!("Changes have not been applied");

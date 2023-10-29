@@ -1,4 +1,7 @@
+use std::time::Duration;
+
 use colored::Colorize;
+use log;
 use question::{Answer, Question};
 use reqwest::blocking::{Client, Response};
 use serde_json::json;
@@ -71,8 +74,10 @@ impl GptyCompletions {
         let mut group_prompts = vec![self.system_prompt.clone()];
         group_prompts.extend(prompt.clone());
 
+        log::debug!("Calling OpenAI API: {}", api_addr);
         let response = client
             .post(api_addr)
+            .timeout(Duration::from_secs(60 * 3))
             .json(&json!({
                 "top_p": 1,
                 "temperature": 0,

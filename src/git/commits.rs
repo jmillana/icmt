@@ -35,14 +35,26 @@ impl CommitMsg {
     }
 
     pub fn to_string(self: &Self) -> String {
-        let body = match &self.body {
-            Some(body) => body,
-            None => "",
-        };
         let text = format!(
             "Commit: {}\nAuthor: {}\nDate: {}\n{}\n\n{}",
-            self.hash, self.author, self.date, self.title, body,
+            self.hash,
+            self.author,
+            self.date,
+            self.title,
+            self.get_body()
         );
+        return text;
+    }
+
+    pub fn get_body(self: &Self) -> String {
+        return match &self.body {
+            Some(body) => body.clone(),
+            None => String::new(),
+        };
+    }
+
+    pub fn contents(self: &Self) -> String {
+        let text = format!("{}\n\n{}", self.title, self.get_body());
         return text;
     }
 }
