@@ -78,7 +78,7 @@ pub fn get_squash_user_prompt(commits: Vec<String>, hint: &Option<String>) -> Pr
         content.push_str(format!("Hint: {}", hint).as_str());
     }
     content.push_str(
-        "Provide a concise squash, extracting the key information from the following commits :\n",
+        "Provide a concise squash of the providesd commits. Extract the key information and summaryse as much as you can the following commits :\n",
     );
 
     for commit in commits {

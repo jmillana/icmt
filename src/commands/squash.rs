@@ -54,19 +54,20 @@ pub fn squash_workflow(mut chat_completions: chatgpty::GptyCompletions, args: &S
     }
     if auto_accept
         || ask_for_confirmation(
-            format!(">> Reset branch head to {}? [Y/n]", base_branch).as_str(),
+            format!(">> Checkout to branch: {}? [Y/n]", base_branch).as_str(),
             None,
         )
     {
         // Reset the head of the branch and commit
-        pprint(&"git stash".to_string(), "bash");
         pprint(&format!("git checkout {}", &base_branch), "bash");
         if args.dryrun {
             println!("Dryrun: branch head have not been modified");
         } else {
-            git::stash();
             git::checkout(&base_branch);
         }
+    } else {
+        println!("Exiting...");
+        return;
     }
     if auto_accept || ask_for_confirmation(">> Squash the commits? [Y/n]", None) {
         let merge_cmd = format!("git merge --squash {} '", &branch_name);

@@ -7,17 +7,7 @@ pub fn squash(branch: &String) {
         .arg(branch)
         .output()
         .unwrap_or_else(|_| {
-            println!("Failed to execute git checkout.");
-            std::process::exit(1);
-        });
-}
-
-pub fn stash() {
-    Command::new("git")
-        .arg("stash")
-        .output()
-        .unwrap_or_else(|_| {
-            println!("Failed to execute git stash.");
+            println!("Failed to run git checkout.");
             std::process::exit(1);
         });
 }
@@ -29,7 +19,7 @@ pub fn cached_diff() -> Option<Vec<String>> {
         .arg("--cached")
         .output()
         .unwrap_or_else(|_| {
-            println!("Failed to execute git diff.");
+            println!("Failed to run git diff.");
             std::process::exit(1);
         });
 
@@ -52,7 +42,7 @@ pub fn checkout(branch: &String) {
         .arg(branch)
         .output()
         .unwrap_or_else(|_| {
-            println!("Failed to execute git checkout.");
+            println!("Failed to run git checkout.");
             std::process::exit(1);
         });
 }
