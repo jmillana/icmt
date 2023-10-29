@@ -2,7 +2,7 @@
 name = "icmt"
 license = "MIT"
 edition = "2021"
-version = "0.3.1"
+version = "0.3.2"
 readme = "README.md"
 categories = ["command-line-utilities"]
 homepage = "https://github.com/jmillana/icmt"
@@ -26,5 +26,5 @@ bat = { version = "0.24.0", default-features = false, features = [
   "regex-onig",
 ] }
 colored = "2.0.4"
-regex = { version = "1.10.2", features = ["pattern"] }
+regex = { version = "1.10.2" }
 env_logger = "0.10.0"

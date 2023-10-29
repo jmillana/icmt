@@ -16,7 +16,7 @@ pub struct CommitMsg {
 }
 
 impl CommitMsg {
-    pub fn from_str(commit: &str) -> Self {
+    pub fn from_string(commit: &String) -> Self {
         let lines = commit.split("\n").collect::<Vec<&str>>();
 
         let body;
@@ -59,30 +59,39 @@ impl CommitMsg {
     }
 }
 
-fn split_keep<'a>(r: &Regex, text: &'a str) -> Vec<&'a str> {
+fn split_keep<'a>(r: &Regex, text: &'a str) -> Vec<String> {
     let mut result = Vec::new();
-    let mut last = 0;
-    for (index, _) in text.match_indices(r) {
-        if last != index {
-            result.push(&text[last..index]);
-            last = index;
+    // let mut last = 0;
+    let mut count = 0;
+    let mut data = String::new();
+    for line in text.split("\n") {
+        if r.is_match(line) {
+            if !data.is_empty() {
+                result.push(data);
+            }
+            data = String::new();
+            data.push_str(line);
+            count = 0;
         }
+        if count > 0 {
+            data.push_str("\n");
+            data.push_str(line);
+        }
+        count += 1;
     }
-    if last < text.len() {
-        result.push(&text[last..]);
-    }
-    result
+    result.push(data);
+    return result;
 }
 
 impl CommitHistory {
     pub fn from_string(data: &Vec<String>) -> Self {
         let mut commits = Vec::new();
-        let re = Regex::new(r"commit [a-z0-9]{40}.*").expect("Invalid regex");
+        let re = Regex::new(r"commit ([a-z0-9]{40}).*").expect("Invalid regex");
 
         let single_string = data.join("\n");
         let parts = split_keep(&re, &single_string);
         for part in parts {
-            commits.push(CommitMsg::from_str(part));
+            commits.push(CommitMsg::from_string(&part));
         }
         return Self { commits };
     }
