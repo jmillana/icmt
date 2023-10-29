@@ -27,25 +27,65 @@ To get a full overview of all available options, run `imct --help`
 
 ```sh
 $ icmt --help
-Generates commit messages from the command line.
+Generate commit messages with AI, using chat-gpt-3.5-turbo
 
-With the `commit` mode the system will check if there is any file ready to be commited
-In case --gitmoji option is set it will try to generate the commit using emojis.
+Usage: icmt [OPTIONS] <COMMAND>
 
-Usage: icmt [OPTIONS] <PROMPT>
-
-Arguments:
-  <PROMPT>
+Commands:
+  commit, -c  Autogenerate a commit message
+  help        Print this message or the help of the given subcommand(s)
 
 Options:
-  -m, --mode     [default: commit] Currently only commit mode is implemented
-  -e, --gtmoji   Use gitmoji emojis for the commit message 
-  -t, --token-limit Set the maximum amount of tokens that can be used per request
-  -H, --hint     Set a hint to be used to give extra context to the generated responses
-  -h, --help     Print help information
-  -V, --version  Print version information
+  -y                               Auto accept the generated commit
+  -d, --dryrun                     Show the generated command without executing them
+  -t, --token-limit <TOKEN_LIMIT>  Limit the ammout of tokens to be used
+  -h, --help                       Print help
+  -V, --version                    Print version
 ```
 
+## Example
+
+```sh
+$ icmt commit -e
+🤖 Welcome to commit AI!
+✔ Got some results!
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+:memo: Update README.md with build and run instructions
+
+Update the README.md file with instructions on how to build and run the project. Provide information on installing the latest version of Rust using rustup, and the commands `cargo build` and `cargo run` to build and run the project.
+
+:bug: fix: Correct typo in command example
+
+Fix a typo in the command example by changing `-y` to `-t` to match the correct option for setting the maximum amount of tokens that can be used per request.
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+>> Refine the prompt? [y/N] y
+>> Enter your refinement:  Remove the bug section
+✔ Refined result!
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+:memo: Update README.md with build and run instructions
+
+Update the README.md file with instructions on how to build and run the project. Provide information on installing the latest version of Rust using rustup, and the commands `cargo build` and `cargo run` to build and run the project.
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+>> Refine the prompt? [y/N]
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+📝 Update README.md with build and run instructions
+
+Update the README.md file with instructions on how to build and run the project. Provide information on installing the latest version of Rust using rustup, and the commands `cargo build` and `cargo run` to build and run the project.
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+>> Apply the generated commit? [Y/n]
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+git commit -m '📝 Update README.md with build and run instructions
+
+Update the README.md file with instructions on how to build and run the project. Provide information on installing the latest version of Rust using rustup, and the commands `cargo build` and `cargo run` to build and run the project.
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+✔ Command ran successfully
+[main 0b7bed5] 📝 Update README.md with build and run instructions
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+```
+Also, if you want to manually update the generated commit you can always run and amend before pushing the changes to the remote
+```sh
+git commit --amend
+```
 ## Develop
 
 Make sure you have the latest version of rust installed (use [rustup](https://rustup.rs/)). Then, you can build the project by running `cargo build`, and run it with `cargo run`.

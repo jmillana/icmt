@@ -1,23 +1,4 @@
-use crate::Cli;
 use serde::{Deserialize, Serialize};
-
-pub enum SystemPrompt {
-    Commit,
-}
-
-impl SystemPrompt {
-    /* Returns a system prompt based on the type of prompt requested
-     *
-     * # Arguments
-     * * `self` - The type of prompt to return
-     * * `options` - The CLI options
-     * */
-    pub fn prompt(self: Self, options: &Cli) -> Prompt {
-        return match self {
-            SystemPrompt::Commit => commit_system_prompt(options.gitmoji),
-        };
-    }
-}
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Prompt {
@@ -55,6 +36,25 @@ pub fn commit_system_prompt(gitmoji: bool) -> Prompt {
     return Prompt::build("system".to_string(), content);
 }
 
+pub fn squash_system_prompt(gitmoji: bool) -> Prompt {
+    /*
+     *
+     * */
+    let mut content = String::new();
+    content.push_str(
+        "You are an assistant to a programmer that will be generating squashed commit messages",
+    );
+    content.push_str(
+        "\nYour task if to identify the key data present in the series of logs, and combine them into a single redacted commit message that drops meaningless information and simplifies the understanding of the implemented changes",
+    );
+    if gitmoji {
+        content.push_str(" (using gitmoji emojis)");
+    }
+
+    content.push_str("\nFollowing the format: <type> ([optional scope]): <short description>\n\n[optional body]\n[optional footer]\n");
+    return Prompt::build("system".to_string(), content);
+}
+
 pub fn get_commit_user_prompt(changes: Vec<String>, hint: &Option<String>) -> Prompt {
     let mut content = String::new();
     if let Some(hint) = hint {
@@ -63,7 +63,26 @@ pub fn get_commit_user_prompt(changes: Vec<String>, hint: &Option<String>) -> Pr
     content.push_str("Provide a commit message for the following changes:\n");
 
     for change in changes {
+        if change.as_str() == "" {
+            continue;
+        }
         content.push_str(change.as_str());
+        content.push_str("\n");
+    }
+    return Prompt::build("user".to_string(), content);
+}
+
+pub fn get_squash_user_prompt(commits: Vec<String>, hint: &Option<String>) -> Prompt {
+    let mut content = String::new();
+    if let Some(hint) = hint {
+        content.push_str(format!("Hint: {}", hint).as_str());
+    }
+    content.push_str(
+        "Provide a concise squash of the providesd commits. Extract the key information and summaryse as much as you can the following commits :\n",
+    );
+
+    for commit in commits {
+        content.push_str(commit.as_str());
         content.push_str("\n");
     }
     return Prompt::build("user".to_string(), content);
