@@ -1,13 +1,10 @@
 # Copilot, for your commits
 
-icmt, spelled "I Commit", automatically generate commit messages for the current changes.
-A CLI tool that generates commit messages from repository state.
-
-This poject is highly ispired by https://github.com/m1guelpf/plz-cli
+`icmt`, spelled "I Commit", automatically generates commit messages based on the current changes in your repository. It's a CLI tool that's inspired by [plz-cli](https://github.com/m1guelpf/plz-cli).
 
 ## Installation
 
-You can install `icmt` by running the following command in your terminal.
+You can install `icmt` by running the following command in your terminal:
 
 ```
 curl -fsSL https://raw.githubusercontent.com/jmillana/icmt/main/install.sh | sh -
@@ -15,15 +12,13 @@ curl -fsSL https://raw.githubusercontent.com/jmillana/icmt/main/install.sh | sh 
 
 ## Usage
 
-`icmt` uses [GPT-3](https://beta.openai.com/). To use it, you'll need to grab an API key from [your dashboard](https://beta.openai.com/), and save it to `OPENAI_API_KEY` as follows (you can also save it in your bash/zsh profile for persistance between sessions).
+`icmt` uses [GPT-3](https://platform.openai.com/docs/guides/gpt). To use it, you'll need to grab an API key from [your dashboard](https://platform.openai.com/account/api-keys), and save it to `OPENAI_API_KEY` as follows (you can also save it in your bash/zsh profile for persistance between sessions).
 
 ```bash
 export OPENAI_API_KEY='sk-XXXXXXXX'
 ```
 
-Once you have configured your environment, run `icmt` followed by whatever it is that you want to do (`icmt show me all options for the icmt cli`).
-
-To get a full overview of all available options, run `imct --help`
+To see a full list of available options, run icmt --help:
 
 ```sh
 $ icmt --help
@@ -33,12 +28,14 @@ Usage: icmt [OPTIONS] <COMMAND>
 
 Commands:
   commit, -c  Autogenerate a commit message
+  squash, -s  Autogenerate a squash message
   help        Print this message or the help of the given subcommand(s)
 
 Options:
   -y                               Auto accept the generated commit
   -d, --dryrun                     Show the generated command without executing them
   -t, --token-limit <TOKEN_LIMIT>  Limit the ammout of tokens to be used
+  -H, --hint [<HINT>...]           Drive the AI to de-genenerate commit messages that fulfill your desires
   -h, --help                       Print help
   -V, --version                    Print version
 ```
@@ -82,7 +79,7 @@ Update the README.md file with instructions on how to build and run the project.
 [main 0b7bed5] 📝 Update README.md with build and run instructions
  1 file changed, 5 insertions(+), 1 deletion(-)
 ```
-Also, if you want to manually update the generated commit you can always run and amend before pushing the changes to the remote
+If you want to manually update the generated commit, you can always run the following command and then amend it before pushing the changes to the remote:
 ```sh
 git commit --amend
 ```
