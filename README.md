@@ -10,6 +10,13 @@ You can install `icmt` by running the following command in your terminal:
 curl -fsSL https://raw.githubusercontent.com/jmillana/icmt/main/install.sh | sh -
 ```
 
+### Optional
+You want to use emojis on commit messages? Install gitmoji, a tool that provides a preset of emojis to get an easy way of identifying the purpose of a commit. Learn more at [gitmoji](https://github.com/carloscuesta/gitmoji).
+
+```bash
+npm i -g gitmoji-cli
+```
+
 ## Usage
 
 `icmt` uses [GPT-3](https://platform.openai.com/docs/guides/gpt). To use it, you'll need to grab an API key from [your dashboard](https://platform.openai.com/account/api-keys), and save it to `OPENAI_API_KEY` as follows (you can also save it in your bash/zsh profile for persistance between sessions).
